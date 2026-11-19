@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mito ou Verdade? - Atores e Literacia dos Media</title>
+<style>
+{
+box-sizing: border-box;
+}
+body {
+font-family: Arial, sans-serif;
+background: linear-gradient(135deg, #171c3b, #493477);
+color: white;
+margin: 0;
+padding: 20px;
+}
+.container {
+max-width: 750px;
+margin: 30px auto;
+background: white;
+color: #252542;
+padding: 30px;
+border-radius: 20px;
+box-shadow: 0 8px 30px #0005;
+}
+h1 {
+text-align: center;
+color: #6543a5;
+font-size: 30px;
+}
+.subtitle {
+text-align: center;
+color: #666;
+margin-bottom: 25px;
+}
+.info {
+text-align: center;
+background: #eee9fa;
+padding: 12px;
+border-radius: 10px;
+margin-bottom: 20px;
+}
+.progress {
+height: 10px;
+background: #ddd;
+border-radius: 20px;
+margin: 15px 0 25px;
+overflow: hidden;
+}
+.progress-bar {
+height: 100%;
+width: 0%;
+background: #7952c8;
+transition: width 0.3s;
+}
+.question {
+font-size: 21px;
+font-weight: bold;
+margin-bottom: 20px;
+line-height: 1.5;
+}
+.answers {
+display: flex;
+gap: 15px;
+}
+button {
+cursor: pointer;
+border: none;
+border-radius: 10px;
+padding: 14px 20px;
+font-size: 16px;
+font-weight: bold;
+transition: 0.2s;
+}
+.answers button {
+flex: 1;
+color: white;
+}
+.mito {
+background: #e65c65;
+}
+.verdade {
+background: #269c75;
+}
+button:hover {
+opacity: 0.85;
+transform: scale(1.02);
+}
+.feedback {
+margin-top: 20px;
+padding: 15px;
+border-radius: 10px;
+display: none;
+line-height: 1.5;
+}
+.correct {
+background: #d9f5e6;
+color: #17663f;
+}
+.incorrect {
+background: #ffe0e0;
+color: #9b2525;
+}
+.next {
+display: none;
+margin: 20px auto 0;
+background: #6543a5;
+color: white;
+width: 100%;
+}
+.result {
+text-align: center;
+display: none;
+}
+.result h2 {
+color: #6543a5;
+font-size: 30px;
+}
+.score {
+font-size: 55px;
+font-weight: bold;
+color: #269c75;
+}
+.restart {
+background: #6543a5;
+color: white;
+margin-top: 20px;
+width: 100%;
+}
+.final-message {
+background: #eee9fa;
+padding: 20px;
+border-radius: 12px;
+margin-top: 20px;
+}
+.footer {
+text-align: center;
+font-size: 13px;
+color: #888;
+margin-top: 25px;
+}
+@media(max-width: 500px) {
+.container {
+padding: 20px;
+}
+.answers {
+flex-direction: column;
+}
+h1 {
+font-size: 24px;
+}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🎬 Mito ou Verdade?</h1>
+<p class="subtitle">
+Atores internacionais e Literacia dos Media
+</p>
+<div class="info">
+🎯 Responde às 10 perguntas e testa os teus conhecimentos!
+<br><br>
+Cada resposta certa vale 1 ponto.
+</div>
+<div id="game">
+<div class="info">
+Pergunta <span id="current">1</span> de 10
+</div>
+<div class="progress">
+<div class="progress-bar" id="progress"></div>
+</div>
+<div class="question" id="question"></div>
+<div class="answers">
+<button class="mito" onclick="answer('Mito')">
+❌ MITO
+</button>
+<button class="verdade" onclick="answer('Verdade')">
+✅ VERDADE
+</button>
+</div>
+<div class="feedback" id="feedback"></div>
+<button class="next" id="next" onclick="nextQuestion()">
+Próxima pergunta ➜
+</button>
+</div>
+<div class="result" id="result">
+<h2>🏆 Resultado final!</h2>
+<div class="score" id="score"></div>
+<h3 id="message"></h3>
+<div class="final-message">
+🌍 <strong>Mensagem final:</strong>
+<p>
+Não acredites em tudo o que vês!
+Questiona, verifica e pensa antes de partilhar.
+A literacia dos media começa contigo!
+</p>
+</div>
+<button class="restart" onclick="restartGame()">
+🔄 Jogar novamente
+</button>
+</div>
+<div class="footer">
+Jogo educativo | Literacia dos Media
+</div>
+</div>
+<script>
+const questions = [
+{
+q: "Tudo o que um ator publica nas redes sociais corresponde necessariamente à realidade.",
+a: "Mito",
+e: "As publicações podem ser encenadas, editadas ou planeadas para criar determinada imagem pública."
+},
+{
+q: "As fotografias de atores internacionais podem ser alteradas digitalmente.",
+a: "Verdade",
+e: "A edição digital pode modificar a aparência, a iluminação e até elementos do cenário."
+},
+{
+q: "Se uma notícia sobre um ator tiver muitas partilhas, significa que é verdadeira.",
+a: "Mito",
+e: "A popularidade de uma publicação não garante a sua credibilidade."
+},
+{
+q: "Os atores podem utilizar as redes sociais para promover marcas e produtos.",
+a: "Verdade",
+e: "Muitos atores fazem parcerias publicitárias e conteúdos patrocinados."
+},
+{
+q: "Todas as notícias publicadas em sites de entretenimento são verdadeiras.",
+a: "Mito",
+e: "É importante verificar a fonte, a autoria e a confirmação da informação."
+},
+{
+q: "Uma fotografia de um ator pode ser retirada do seu contexto original e induzir em erro.",
+a: "Verdade",
+e: "Uma imagem verdadeira pode transmitir uma mensagem falsa quando é apresentada fora do seu contexto."
+},
+{
+q: "Os vídeos e as imagens criados com inteligência artificial podem imitar atores reais.",
+a: "Verdade",
+e: "Os deepfakes podem reproduzir rostos e vozes, pelo que é importante verificar a origem dos conteúdos."
+},
+{
+q: "A vida pessoal dos atores corresponde sempre à imagem que vemos nos filmes.",
+a: "Mito",
+e: "As personagens são ficcionais e não representam necessariamente a personalidade dos atores."
+},
+{
+q: "Devemos confirmar uma notícia sobre uma celebridade em mais do que uma fonte credível.",
+a: "Verdade",
+e: "Comparar fontes ajuda a identificar erros, rumores e desinformação."
+},
+{
+q: "A publicidade feita por um ator nunca influencia as escolhas dos consumidores.",
+a: "Mito",
+e: "A popularidade e a imagem pública dos atores podem influenciar opiniões e decisões de compra."
+}
+];
+let currentQuestion = 0;
+let points = 0;
+let answered = false;
+function showQuestion() {
+answered = false;
+const q = questions[currentQuestion];
+document.getElementById("current").textContent =
+currentQuestion + 1;
+document.getElementById("question").textContent = q.q;
+document.getElementById("progress").style.width =
+(currentQuestion / questions.length * 100) + "%";
+document.getElementById("feedback").style.display = "none";
+document.getElementById("next").style.display = "none";
+document.querySelectorAll(".answers button").forEach(btn => {
+btn.disabled = false;
+btn.style.opacity = "1";
+});
+}
+function answer(choice) {
+if (answered) return;
+answered = true;
+const q = questions[currentQuestion];
+const feedback = document.getElementById("feedback");
+if (choice === q.a) {
+points++;
+feedback.className = "feedback correct";
+feedback.innerHTML =
+"✅ <strong>Correto! É " + q.a + ".</strong><br>" + q.e;
+} else {
+feedback.className = "feedback incorrect";
+feedback.innerHTML =
+"❌ <strong>Resposta incorreta!</strong><br>" +
+"A resposta certa é: <strong>" + q.a +
+"</strong>.<br>" + q.e;
+}
+feedback.style.display = "block";
+document.querySelectorAll(".answers button").forEach(btn => {
+btn.disabled = true;
+btn.style.opacity = "0.5";
+});
+document.getElementById("next").style.display = "block";
+if (currentQuestion === questions.length - 1) {
+document.getElementById("next").textContent =
+"Ver resultado final 🏆";
+}
+}
+function nextQuestion() {
+currentQuestion++;
+if (currentQuestion < questions.length) {
+showQuestion();
+} else {
+showResult();
+}
+}
+function showResult() {
+document.getElementById("game").style.display = "none";
+document.getElementById("result").style.display = "block";
+document.getElementById("score").textContent =
+points + " / 10";
+let message = "";
+if (points >= 9) {
+message = "🌟 Excelente! És um especialista em literacia dos media!";
+} else if (points >= 7) {
+message = "👏 Muito bem! Tens bons conhecimentos!";
+} else if (points >= 5) {
+message = "👍 Bom esforço! Continua a praticar!";
+} else {
+message = "📚 Continua a aprender e a questionar a informação!";
+}
+document.getElementById("message").textContent = message;
+}
+function restartGame() {
+currentQuestion = 0;
+points = 0;
+answered = false;
+document.getElementById("game").style.display = "block";
+document.getElementById("result").style.display = "none";
+document.getElementById("next").textContent =
+"Próxima pergunta ➜";
+showQuestion();
+}
+// Iniciar o jogo
+showQuestion();
+</script>
+</body>
+</html>

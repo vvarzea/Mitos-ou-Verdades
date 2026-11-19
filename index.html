@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detetive dos Media | Secundário</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Arial,Helvetica,sans-serif;color:#202038;background:radial-gradient(circle at top,#45357d 0%,#171a38 55%,#0d1025 100%);display:flex;justify-content:center;align-items:center;padding:20px}
+.container{width:100%;max-width:850px;background:#fff;border-radius:28px;overflow:hidden;box-shadow:0 20px 70px #0007}
+.header{background:linear-gradient(135deg,#211943,#6543a5);color:#fff;padding:32px 28px;text-align:center}
+.header h1{margin:0;font-size:34px}.header p{margin:10px 0 0;opacity:.9}
+.badge{display:inline-block;margin-top:15px;padding:8px 15px;border-radius:30px;background:#ffffff20;font-size:13px}
+.content{padding:30px}.info{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:22px}
+.info-card{background:#f3f0fb;border-radius:15px;padding:12px;text-align:center}.info-card span{display:block;font-size:12px;color:#777;margin-bottom:4px}.info-card strong{font-size:19px;color:#5d3da0}
+.progress-area{margin-bottom:25px}.progress-top{display:flex;justify-content:space-between;font-size:13px;color:#666;margin-bottom:8px}.progress{height:12px;background:#e5e3ea;border-radius:20px;overflow:hidden}.progress-bar{height:100%;width:0;background:linear-gradient(90deg,#6543a5,#a87de8);border-radius:20px;transition:width .5s}
+.question-box{background:#faf9fd;border:2px solid #eeeaf7;border-radius:20px;padding:28px;margin-bottom:20px}
+.question-label{font-size:13px;color:#6543a5;font-weight:bold;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}.question{font-size:22px;font-weight:bold;line-height:1.5}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:16px}.answer{border:0;border-radius:18px;padding:20px;font-size:19px;font-weight:bold;color:#fff;cursor:pointer;transition:.2s}.answer:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 8px 20px #0003}.answer:disabled{cursor:default}.mito{background:linear-gradient(135deg,#d9485f,#ef6a78)}.verdade{background:linear-gradient(135deg,#168b68,#2eb889)}
+.feedback{display:none;margin-top:20px;padding:20px;border-radius:18px;line-height:1.6;animation:appear .3s}.correct{background:#e4f7ed;border:2px solid #a8e2c3;color:#17663f}.incorrect{background:#fff0f0;border:2px solid #f3b2b2;color:#922d2d}.feedback-title{font-size:18px;font-weight:bold;margin-bottom:8px}
+.next{display:none;width:100%;margin-top:18px;border:0;border-radius:15px;padding:17px;background:linear-gradient(135deg,#6543a5,#805bc5);color:#fff;font-size:17px;font-weight:bold;cursor:pointer}
+.result{display:none;text-align:center;padding:20px 10px}.result-icon{font-size:65px}.result h2{color:#6543a5;font-size:30px}.score{font-size:64px;font-weight:bold;color:#269c75;margin:15px 0}.classification{display:inline-block;background:#eee9fa;color:#6543a5;padding:12px 22px;border-radius:30px;font-size:18px;font-weight:bold}.final-message{background:#f7f5fc;border-radius:18px;padding:22px;margin-top:25px;line-height:1.6}.restart{width:100%;border:0;margin-top:20px;padding:17px;border-radius:15px;background:#6543a5;color:#fff;font-size:17px;font-weight:bold;cursor:pointer}.footer{text-align:center;color:#777;font-size:12px;padding:0 20px 25px}
+@keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){body{padding:10px}.header{padding:25px 18px}.header h1{font-size:27px}.content{padding:20px}.info{grid-template-columns:1fr 1fr}.info-card:last-child{grid-column:span 2}.question-box{padding:20px}.question{font-size:19px}.answers{grid-template-columns:1fr}.answer{padding:17px}}
+</style>
+</head>
+<body>
+<div class="container">
+<header class="header">
+<h1>🎬 Mito ou Verdade?</h1>
+<p>Atores, redes sociais e Literacia dos Media</p>
+<div class="badge">🕵️ Desafio de pensamento crítico · Secundário</div>
+</header>
+
+<main class="content">
+<section id="game">
+<div class="info">
+<div class="info-card"><span>Pergunta</span><strong><span id="current">1</span> / 15</strong></div>
+<div class="info-card"><span>Pontos</span><strong id="points">0</strong></div>
+<div class="info-card"><span>🔥 Sequência</span><strong id="streak">0</strong></div>
+</div>
+
+<div class="progress-area">
+<div class="progress-top"><span>Progresso</span><span id="percent">0%</span></div>
+<div class="progress"><div class="progress-bar" id="progress"></div></div>
+</div>
+
+<div class="question-box">
+<div class="question-label">Analisa antes de responder</div>
+<div class="question" id="question"></div>
+</div>
+
+<div class="answers">
+<button class="answer mito" onclick="answer('Mito')">❌ MITO</button>
+<button class="answer verdade" onclick="answer('Verdade')">✅ VERDADE</button>
+</div>
+
+<div class="feedback" id="feedback"></div>
+<button class="next" id="next" onclick="nextQuestion()">Próximo desafio ➜</button>
+</section>
+
+<section class="result" id="result">
+<div class="result-icon" id="resultIcon">🏆</div>
+<h2>Investigação concluída!</h2>
+<div class="score" id="score">0 / 15</div>
+<div class="classification" id="classification"></div>
+<div class="final-message">
+<strong>🧠 A regra do detetive digital</strong>
+<p id="finalText"></p>
+</div>
+<button class="restart" onclick="restartGame()">🔄 Nova investigação</button>
+</section>
+</main>
+
+<div class="footer">Jogo educativo · Literacia dos Media · Secundário</div>
+</div>
+
+<script>
+const questions=[
+{q:"Um vídeo mostra um ator a fazer uma declaração polémica. Como o vídeo tem milhões de visualizações, podemos considerá-lo autêntico.",a:"Mito",e:"Popularidade não prova autenticidade. O vídeo pode estar editado, fora de contexto ou ter sido manipulado com inteligência artificial. É necessário procurar a origem e comparar com fontes credíveis."},
+{q:"Uma fotografia publicada pela conta oficial de uma celebridade pode ter sido editada antes de ser publicada.",a:"Verdade",e:"Uma conta oficial confirma quem publicou o conteúdo, mas não garante que uma fotografia seja original ou sem edição."},
+{q:"Se vários sites repetirem exatamente a mesma informação, isso significa que existem várias fontes independentes a confirmá-la.",a:"Mito",e:"Vários sites podem estar a reproduzir a mesma notícia ou publicação original. É importante descobrir qual é a fonte inicial da informação."},
+{q:"Um conteúdo patrocinado por uma marca pode parecer uma recomendação pessoal do ator ou influencer.",a:"Verdade",e:"A publicidade digital pode ser integrada no conteúdo habitual do criador. Por isso, é importante identificar quando existe uma relação comercial."},
+{q:"Uma fotografia verdadeira pode ser usada para transmitir uma informação enganadora.",a:"Verdade",e:"Uma imagem pode ser real e, ainda assim, ser apresentada com uma legenda falsa ou retirada do seu contexto original."},
+{q:"Se uma notícia apresenta uma fotografia verdadeira, o texto que a acompanha também está necessariamente correto.",a:"Mito",e:"Imagem e texto são elementos diferentes. Uma fotografia verdadeira pode ser associada a uma data, local ou acontecimento que não correspondem à realidade."},
+{q:"Um deepfake pode reproduzir o rosto ou a voz de uma pessoa real de forma bastante convincente.",a:"Verdade",e:"Ferramentas de inteligência artificial podem criar ou alterar imagens, vídeos e vozes. Por isso, conteúdos audiovisuais também precisam de verificação."},
+{q:"Uma conta com muitos seguidores é, por si só, uma fonte de informação mais credível.",a:"Mito",e:"Número de seguidores mede alcance, não credibilidade. Uma conta popular também pode divulgar erros, rumores ou conteúdos manipulados."},
+{q:"O título de uma notícia pode influenciar a interpretação do leitor antes de este ler o conteúdo completo.",a:"Verdade",e:"Títulos podem destacar apenas uma parte da informação, usar linguagem emocional ou criar expectativas diferentes do conteúdo da notícia."},
+{q:"Se uma celebridade negar uma notícia sobre si própria, a sua declaração deve ser automaticamente considerada a versão verdadeira.",a:"Mito",e:"A declaração da pessoa é uma fonte relevante, mas pode não ser suficiente. A verificação deve considerar evidências e outras fontes credíveis."},
+{q:"Os algoritmos das redes sociais podem contribuir para que uma pessoa veja repetidamente conteúdos semelhantes aos que já consultou.",a:"Verdade",e:"Os sistemas de recomendação usam sinais relacionados com o comportamento dos utilizadores para selecionar conteúdos que podem manter o seu interesse."},
+{q:"Verificar a data de uma fotografia ou notícia é uma etapa importante para perceber se o conteúdo está a ser apresentado no contexto correto.",a:"Verdade",e:"Um conteúdo antigo pode ser reutilizado para parecer atual. A data é uma das informações fundamentais numa verificação."},
+{q:"Uma imagem criada por inteligência artificial é sempre fácil de identificar porque contém erros visuais evidentes.",a:"Mito",e:"A qualidade dos conteúdos gerados por IA tem evoluído rapidamente. Alguns erros podem ser difíceis de detetar, pelo que a origem e o contexto continuam a ser importantes."},
+{q:"Antes de partilhar uma informação polémica sobre uma celebridade, comparar a notícia com fontes independentes pode ajudar a detetar desinformação.",a:"Verdade",e:"Comparar fontes permite procurar confirmação, identificar contradições e perceber se a informação tem origem numa fonte credível."},
+{q:"Se uma publicação provoca uma reação emocional muito forte, isso é um bom motivo para a partilhar imediatamente.",a:"Mito",e:"Conteúdos que provocam choque, medo ou indignação podem incentivar partilhas impulsivas. Uma reação emocional forte é precisamente um bom motivo para parar e verificar."}
+];
+
+let currentQuestion=0,points=0,streak=0,answered=false;
+
+function showQuestion(){
+answered=false;
+const q=questions[currentQuestion];
+document.getElementById("current").textContent=currentQuestion+1;
+document.getElementById("question").textContent=q.q;
+const pct=((currentQuestion)/questions.length)*100;
+document.getElementById("progress").style.width=pct+"%";
+document.getElementById("percent").textContent=Math.round(pct)+"%";
+document.getElementById("feedback").style.display="none";
+document.getElementById("next").style.display="none";
+document.getElementById("next").textContent=currentQuestion===questions.length-1?"Ver resultado final 🏆":"Próximo desafio ➜";
+document.querySelectorAll(".answer").forEach(b=>{b.disabled=false;b.style.opacity="1"});
+}
+
+function answer(choice){
+if(answered)return;
+answered=true;
+const q=questions[currentQuestion];
+const feedback=document.getElementById("feedback");
+const buttons=document.querySelectorAll(".answer");
+buttons.forEach(b=>{b.disabled=true;b.style.opacity=".55"});
+if(choice===q.a){
+points++;
+streak++;
+feedback.className="feedback correct";
+feedback.innerHTML=`<div class="feedback-title">✅ Correto! É ${q.a}.</div>${q.e}`;
+}else{
+streak=0;
+feedback.className="feedback incorrect";
+feedback.innerHTML=`<div class="feedback-title">❌ Não é bem assim.</div>A resposta correta é <strong>${q.a}</strong>.<br>${q.e}`;
+}
+document.getElementById("points").textContent=points;
+document.getElementById("streak").textContent=streak;
+feedback.style.display="block";
+document.getElementById("next").style.display="block";
+}
+
+function nextQuestion(){
+currentQuestion++;
+if(currentQuestion<questions.length)showQuestion();
+else showResult();
+}
+
+function showResult(){
+document.getElementById("game").style.display="none";
+document.getElementById("result").style.display="block";
+document.getElementById("score").textContent=points+" / "+questions.length;
+let cls,icon,text;
+if(points>=13){
+cls="🏆 Mestre da Literacia dos Media";
+icon="🏆";
+text="Excelente capacidade de análise. Sabes que uma informação não se torna verdadeira apenas porque é popular, emocionante ou repetida muitas vezes.";
+}else if(points>=10){
+cls="🔎 Investigador Digital";
+icon="🔎";
+text="Muito bom trabalho. Tens boas estratégias para questionar conteúdos e reconhecer possíveis sinais de desinformação.";
+}else if(points>=7){
+cls="🧠 Observador Atento";
+icon="🧠";
+text="Bom resultado. Continua a desenvolver o hábito de verificar fontes, datas, contexto e intenção antes de acreditar ou partilhar.";
+}else{
+cls="📱 Detetive em Treino";
+icon="📱";
+text="Este é apenas o início. Quando encontrares um conteúdo duvidoso, para, verifica a fonte, procura confirmação e só depois decide se deves partilhar.";
+}
+document.getElementById("classification").textContent=cls;
+document.getElementById("resultIcon").textContent=icon;
+document.getElementById("finalText").textContent=text;
+}
+
+function restartGame(){
+currentQuestion=0;points=0;streak=0;
+document.getElementById("points").textContent="0";
+document.getElementById("streak").textContent="0";
+document.getElementById("game").style.display="block";
+document.getElementById("result").style.display="none";
+showQuestion();
+}
+
+showQuestion();
+</script>
+</body>
+</html>
